@@ -8,7 +8,12 @@ import { HomeLink } from './types';
 const HomePage = () => {
   const [hoveredLink, setHoveredLink] = useState<string | null>(null);
 
-  const links = [] satisfies HomeLink[];
+  const links = [
+    {
+      path: 'wave-distortion',
+      label: 'Wave distortion',
+    },
+  ] satisfies HomeLink[];
 
   return (
     <main className="px-4">
