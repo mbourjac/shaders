@@ -1,12 +1,17 @@
 import { useRef } from 'react';
 import { useAspect, useTexture } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
+import { MotionValue, transform } from 'framer-motion';
 import { useControls } from 'leva';
 import type { Mesh, PlaneGeometry, ShaderMaterial } from 'three';
 import fragmentShader from '../_shaders/fragment.glsl';
 import vertexShader from '../_shaders/vertex.glsl';
 
-export const WaveDistortion = () => {
+type WaveDistortionProps = {
+  scrollYProgress: MotionValue<number>;
+};
+
+export const WaveDistortion = ({ scrollYProgress }: WaveDistortionProps) => {
   const texture = useTexture('/images/c3p73.webp');
   const { width, height } = texture.image;
 
@@ -31,8 +36,14 @@ export const WaveDistortion = () => {
 
     if (!plane) return;
 
+    const updatedAmplitude = transform(
+      scrollYProgress.get(),
+      [0, 1],
+      [amplitude, 0]
+    );
+
     plane.material.uniforms.uTime.value += delta * speed;
-    plane.material.uniforms.uAmplitude.value = amplitude;
+    plane.material.uniforms.uAmplitude.value = updatedAmplitude;
     plane.material.uniforms.uWaveLength.value = waveLength;
   });
 
