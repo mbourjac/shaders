@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import { useTexture } from '@react-three/drei';
+import { useAspect, useTexture } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import { useControls } from 'leva';
 import type { Mesh, PlaneGeometry, ShaderMaterial } from 'three';
@@ -8,6 +8,10 @@ import vertexShader from '../_shaders/vertex.glsl';
 
 export const WaveDistortion = () => {
   const texture = useTexture('/images/c3p73.webp');
+  const { width, height } = texture.image;
+
+  const scale = useAspect(width, height, 0.3);
+
   const { speed, amplitude, waveLength } = useControls({
     speed: { value: 2, min: 0, max: 10, step: 0.5 },
     amplitude: { value: 0.25, min: 0, max: 5, step: 0.05 },
@@ -33,8 +37,8 @@ export const WaveDistortion = () => {
   });
 
   return (
-    <mesh ref={planeRef}>
-      <planeGeometry args={[3, 3, 45, 45]} />
+    <mesh ref={planeRef} scale={scale}>
+      <planeGeometry args={[1, 1, 45, 45]} />
       <shaderMaterial
         vertexShader={vertexShader}
         fragmentShader={fragmentShader}
